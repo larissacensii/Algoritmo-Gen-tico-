@@ -39,6 +39,7 @@ def computeFitness(populations):
         Class.peso = peso
         Class.pontos = pontosSobrevivencia
         itensMochila.append(Class)
+        print(pontosSobrevivencia, peso )
     return itensMochila
 
 
@@ -65,7 +66,8 @@ def select(itensMochila, maxWeight):
     # Gera um número aleatório no intervalo de 0 até a SomaFitnees
     # Busca os melhores 2 individuos usando o metodo da roleta
     limite = 0
-    while limite < 2:
+    quant = 2
+    while limite < quant:
         valorAleatorio = randrange(0, 100)
         print(valorAleatorio)
         soma = 0
@@ -88,13 +90,62 @@ def select(itensMochila, maxWeight):
             key = key + ", " + list(keys.items())[0][1]
         print(key[2:])
 
-    #return selecionados
+    return selecionados
 
-def croosover(pai1, pai2):
-    pass
+#Crossover multiplo
+def crossover(itensSelecionados):
+    populacao = []
+    index = 0
 
+    for index in range(len(itensSelecionados)):
+        populacao.append(itensSelecionados[index].population)
+
+    tamanhoMax = (len(itensSelecionados[index].population))
+    corte1 = randrange(0, tamanhoMax)
+    corte2 = randrange(0, tamanhoMax)
+
+    print("População antes do crossover" + str(populacao))
+    filho1 = itensSelecionados[0].population
+    filho1[corte1], filho1[corte2] = filho1[corte2], filho1[corte1]
+
+    filho2 = itensSelecionados[1].population
+    filho2[corte1], filho2[corte2] = filho2[corte2], filho2[corte1]
+    populacao.append(filho1)
+    populacao.append(filho2)
+
+    print("População depois do crossover" + str(populacao))
 
 if __name__ == '__main__':
     itensMochila = computeFitness(populations)
-    select(itensMochila, maxWeight)
-    #croosover()
+    selecionados = select(itensMochila, maxWeight)
+    crossover(selecionados)
+
+'''
+1a - Geração 
+
+A1 -> {1,0,0,1,1,0} 
+A2 -> {0,0,1,1,1,0}
+A3 -> {0,1,0,1,0,0}
+A4 -> {0,1,1,0,0,1}
+
+ +---------------+------+--------+----+----+----+----+
+ | Item          | Peso | Pontos | A1 | A2 | A3 | A4 |
+ +---------------+------+--------+----+----+----+----+
+ | Saco de dormir| 15   |     15 | 1  |  0 | 0  | 0  |
+ +---------------+------+--------+----+----+----+----+
+ | Corda         | 3    |      7 | 0  |  0 | 1  | 1  |
+ +---------------+------+--------+----+----+----+----+
+ | Canivete      | 2    |     10 | 0  |  1 | 0  |  1 |
+ +---------------+------+--------+----+----+----+----+
+ | Tocha         | 5    |      5 | 1  |  1 |  1 |  0 |
+ +---------------+------+--------+----+----+----+----+
+ | Garrafa       | 9    |      8 | 1  |  1 |  0 |  0 |
+ +---------------+------+--------+----+----+----+----+
+ | Comida        | 20   |     17 | 0  |  0 |  0 |  1 |
+ +---------------+------+--------+----+----+----+----+
+                        | Peso   | 29 |    |    |    |
+                        +--------+----+----+----+----+
+                        | Pontos | 28 | 23 | 12 | 34 |
+                        +--------+----+----+----+----+
+
+'''
