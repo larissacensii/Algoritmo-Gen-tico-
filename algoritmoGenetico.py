@@ -79,3 +79,5 @@ def select(fitnessPeso, fitnessPontosSobrevivencia, maxWeight):
 if __name__ == '__main__':
     fitnessPeso, fitnessPontosSobrevivencia = computeFitness(populations)
     select(fitnessPeso, fitnessPontosSobrevivencia, maxWeight)
+
+
