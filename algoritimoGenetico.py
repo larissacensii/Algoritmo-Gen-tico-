@@ -1,3 +1,5 @@
+from random import randrange
+
 # Inicialização dos individuos
 populations = [[1, 0, 0, 1, 1, 0], [0, 0, 1, 1, 1, 0], [0, 1, 0, 1, 0, 0], [0, 1, 1, 0, 0, 1]]
 maxWeight = 30
@@ -33,6 +35,7 @@ def select(fitnessPeso, fitnessPontosSobrevivencia, maxWeight):
     pontosSobrevivencia=[]
     somaFitnees = 0
     porcentagem = []
+    selecionados = []
     tour = 3
     #Adiciona na lista peso se o valor do fitnees peso é menor que 30kg
     for index in range(len(fitnessPeso)):
@@ -49,9 +52,29 @@ def select(fitnessPeso, fitnessPontosSobrevivencia, maxWeight):
         valor = round((((pontosSobrevivencia[index])/somaFitnees)*100),2)
         porcentagem.append(valor)
 
+    #Ordena em ordem crescente os valores em porcentagem dos pontos de sobrevivencia
+    porcentagem.sort()
+
+    #Gera um número aleatório no intervalo de 0 até a SomaFitnees
+    #Busca os melhores 2 individuos usando o metodo da roleta
+    limite = 0
+    while limite < 2:
+        valorAleatorio = randrange(0, 100)
+        print(valorAleatorio)
+        soma = 0
+        index = 0
+        for index in range(len(porcentagem)):
+            if soma < valorAleatorio:
+                soma += porcentagem[index]
+            else:
+                break
+        selecionados.append(porcentagem[index])
+        limite += 1
+
     print("Peso " + str(peso) + "    Pontos de sobrevivencia  " + str(pontosSobrevivencia) +
           "    Soma Fitnees  " + str(somaFitnees) + "      Porcentagem " + str(porcentagem))
 
+    print("Os individuos selecionados foram   " + str(selecionados))
 
 if __name__ == '__main__':
     fitnessPeso, fitnessPontosSobrevivencia = computeFitness(populations)
