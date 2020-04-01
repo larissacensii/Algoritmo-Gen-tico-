@@ -1,6 +1,5 @@
 from random import randrange, random
 
-
 class algoritimoGenetico():
     def __init__(self):
         self.itens = list()
@@ -8,7 +7,6 @@ class algoritimoGenetico():
         self.pontos = int
         self.porcentagem = float
         self.population = list()
-
 
 # Inicialização dos individuos
 populations = [[1, 0, 0, 1, 1, 0], [0, 0, 1, 1, 1, 0], [0, 1, 0, 1, 0, 0], [0, 1, 1, 0, 0, 1]]
@@ -22,7 +20,6 @@ itens = [
     {"name": "Garrafa", "weight": 9, "points": 8},
     {"name": "Comida", "weight": 20, "points": 17}
 ]
-
 
 # Avaliação de cada individuo
 def computeFitness(populations):
@@ -40,9 +37,7 @@ def computeFitness(populations):
         Class.peso = peso
         Class.pontos = pontosSobrevivencia
         itensMochila.append(Class)
-        print(pontosSobrevivencia, peso)
     return itensMochila
-
 
 # Escolhe o individuo melhor adaptado pelo método da roleta
 def select(itensMochila, maxWeight):
@@ -95,7 +90,6 @@ def select(itensMochila, maxWeight):
 
     return selecionados
 
-
 # Crossover multiplo
 def crossover(itensSelecionados):
     populacao = []
@@ -120,10 +114,8 @@ def crossover(itensSelecionados):
     print("População depois do crossover" + str(populacao))
     return populacao
 
-
 def stopFunc():
     return True
-
 
 def showResult(selecionados):
     # Printa os itens selecionados
@@ -132,8 +124,6 @@ def showResult(selecionados):
     for keys in selecionados[0].itens:
         key = key + ", " + list(keys.items())[0][1]
     print(key[2:])
-
-
 
 def mutation(selected, txReplace = 25):
     def changeBit(bit):
@@ -151,37 +141,6 @@ def mutation(selected, txReplace = 25):
     print("Depois da mutação: %s" % selected)
 
     return selected
-
-'''
-    # Máximo de bit(s) a ser mutado em %
-    countMax = int(len(selected) * (txReplace /100))
-    #    positions = []
-    #    count = 0
-
-    # Se for alterar todos os elementos | countMax= 100%
-    if countMax == len(selected):
-
-        for i in range(len(selected)):
-            if count < int(countMax):
-                selected[i] = changeBit(selected[i])
-                count = count+1
-
-
-    elif countMax >= 1:
-        for i in range(countMax):
-            valueRandom = randrange(0, (len(selected)-1))
-
-            if i == 0:
-                positions[i] = valueRandom
-            else:
-                if positions[i-1] != valueRandom:
-                    positions[i] = valueRandom
-'''
-
-
-
-
-
 
 if __name__ == '__main__':
     stop = False
