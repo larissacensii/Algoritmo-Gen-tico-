@@ -136,21 +136,49 @@ def showResult(selecionados):
 
 
 def mutation(selected, txReplace = 25):
-    # Máximo de bit(s) a ser mutado em %
-    countMax = len(selected) * (txReplace /100)
-    count = 0
+    def changeBit(bit):
+        if bit == 1:
+            bit = 0
+        else:
+            bit = 1
+        return bit
 
     print("Antes mutação %s" % selected)
 
-    for i in range(len(selected)):
-        if count < int(countMax):
-            if selected[i] == 1:
-                selected[i] = 0
-            else:
-                selected[i] = 1
-            count = count+1
+    valueRandom = randrange(0, (len(selected) - 1))
+    selected[valueRandom] = changeBit(selected[valueRandom])
 
     print("Depois da mutação: %s" % selected)
+
+    return selected
+
+'''
+    # Máximo de bit(s) a ser mutado em %
+    countMax = int(len(selected) * (txReplace /100))
+    #    positions = []
+    #    count = 0
+
+    # Se for alterar todos os elementos | countMax= 100%
+    if countMax == len(selected):
+
+        for i in range(len(selected)):
+            if count < int(countMax):
+                selected[i] = changeBit(selected[i])
+                count = count+1
+
+
+    elif countMax >= 1:
+        for i in range(countMax):
+            valueRandom = randrange(0, (len(selected)-1))
+
+            if i == 0:
+                positions[i] = valueRandom
+            else:
+                if positions[i-1] != valueRandom:
+                    positions[i] = valueRandom
+'''
+
+
 
 
 
@@ -162,13 +190,12 @@ if __name__ == '__main__':
     while not stop:
         selecionados = select(itensMochila, maxWeight)
         populacao = crossover(selecionados)
-        #mutation();
+        populacao[2] = mutation(populacao[2])
         itensMochila = computeFitness(populacao)
         stop = stopFunc()
 
     showResult(selecionados)
 
-    mutation(populacao[0])
 
 '''
 1a - Geração 
