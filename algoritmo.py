@@ -23,6 +23,7 @@ itens = [
     {"name": "Comida", "weight": 20, "points": 17}
 ]
 
+
 # Avaliação de cada individuo
 def computeFitness(populations):
     itensMochila = list()
@@ -39,7 +40,7 @@ def computeFitness(populations):
         Class.peso = peso
         Class.pontos = pontosSobrevivencia
         itensMochila.append(Class)
-        print(pontosSobrevivencia, peso )
+        print(pontosSobrevivencia, peso)
     return itensMochila
 
 
@@ -80,10 +81,12 @@ def select(itensMochila, maxWeight):
         selecionados.append(ItensLowWeight[index])
         limite += 1
 
-    print("Peso " + str([item.peso for item in selecionados]) + "    Pontos de sobrevivencia  " + str([item.pontos for item in selecionados]) +
-          "    Soma Fitnees  " + str(somaFitnees) + "      Porcentagem " + str([item.porcentagem for item in selecionados]))
+    print("Peso " + str([item.peso for item in selecionados]) + "    Pontos de sobrevivencia  " + str(
+        [item.pontos for item in selecionados]) +
+          "    Soma Fitnees  " + str(somaFitnees) + "      Porcentagem " + str(
+        [item.porcentagem for item in selecionados]))
 
-    #Printa os itens selecionados
+    # Printa os itens selecionados
     for item in selecionados:
         key = ""
         for keys in item.itens:
@@ -92,7 +95,8 @@ def select(itensMochila, maxWeight):
 
     return selecionados
 
-#Crossover multiplo
+
+# Crossover multiplo
 def crossover(itensSelecionados):
     populacao = []
     index = 0
@@ -114,11 +118,34 @@ def crossover(itensSelecionados):
     populacao.append(filho2)
 
     print("População depois do crossover" + str(populacao))
+    return populacao
+
+
+def stopFunc():
+    return True
+
+
+def showResult(selecionados):
+    # Printa os itens selecionados
+    print("Vamos levar na mochila os seguintes itens: ")
+    key = ""
+    for keys in selecionados[0].itens:
+        key = key + ", " + list(keys.items())[0][1]
+    print(key[2:])
+
 
 if __name__ == '__main__':
+    stop = False
     itensMochila = computeFitness(populations)
-    selecionados = select(itensMochila, maxWeight)
-    crossover(selecionados)
+
+    while not stop:
+        selecionados = select(itensMochila, maxWeight)
+        populacao = crossover(selecionados)
+        #mutation();
+        itensMochila = computeFitness(populacao)
+        stop = stopFunc()
+
+    showResult(selecionados)
 
 '''
 1a - Geração 
