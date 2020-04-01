@@ -1,4 +1,4 @@
-from random import randrange
+from random import randrange, random
 
 
 class algoritimoGenetico():
@@ -134,6 +134,24 @@ def showResult(selecionados):
     print(key[2:])
 
 
+
+def mutation(selected, txMutation=100):
+    txMutation = txMutation / 100
+
+    print("Antes mutação %s" % selected)
+
+    for i in range(len(selected)):
+        if random() < txMutation:
+            if selected[i] == 1:
+                selected[i] = 0
+            else:
+                selected[i] = 1
+
+    print("Depois da mutação: %s" % selected)
+
+
+
+
 if __name__ == '__main__':
     stop = False
     itensMochila = computeFitness(populations)
@@ -146,6 +164,8 @@ if __name__ == '__main__':
         stop = stopFunc()
 
     showResult(selecionados)
+
+    mutation(populacao[0])
 
 '''
 1a - Geração 
