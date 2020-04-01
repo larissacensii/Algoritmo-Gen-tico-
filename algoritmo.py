@@ -165,7 +165,7 @@ if __name__ == '__main__':
 
     showResult(selecionados)
 
-    mutation(populacao[0])
+    mutation(populacao[0], 95)
 
 '''
 1a - Geração 
