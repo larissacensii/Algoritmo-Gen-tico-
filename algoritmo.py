@@ -135,17 +135,20 @@ def showResult(selecionados):
 
 
 
-def mutation(selected, txMutation=100):
-    txMutation = txMutation / 100
+def mutation(selected, txReplace = 25):
+    # Máximo de bit(s) a ser mutado em %
+    countMax = len(selected) * (txReplace /100)
+    count = 0
 
     print("Antes mutação %s" % selected)
 
     for i in range(len(selected)):
-        if random() < txMutation:
+        if count < int(countMax):
             if selected[i] == 1:
                 selected[i] = 0
             else:
                 selected[i] = 1
+            count = count+1
 
     print("Depois da mutação: %s" % selected)
 
@@ -165,7 +168,7 @@ if __name__ == '__main__':
 
     showResult(selecionados)
 
-    mutation(populacao[0], 95)
+    mutation(populacao[0])
 
 '''
 1a - Geração 
