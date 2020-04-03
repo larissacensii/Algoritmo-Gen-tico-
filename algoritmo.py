@@ -1,4 +1,5 @@
 from random import randrange, random
+import funcs as f
 
 class algoritimoGenetico():
     def __init__(self):
@@ -39,12 +40,14 @@ def computeFitness(populations):
         itensMochila.append(Class)
     return itensMochila
 
+
 # Escolhe o individuo melhor adaptado pelo método da roleta
 def select(itensMochila, maxWeight):
     ItensLowWeight = list()
     somaFitnees = 0
     selecionados = []
     tour = 3
+
     # Adiciona na lista peso se o valor do fitnees peso é menor que 30kg
     for index in range(len(itensMochila)):
         if itensMochila[index].peso < maxWeight:
@@ -81,7 +84,7 @@ def select(itensMochila, maxWeight):
           "    Soma Fitnees  " + str(somaFitnees) + "      Porcentagem " + str(
         [item.porcentagem for item in selecionados]))
 
-    # Printa os itens selecionados
+    # Printa os itens escolhidos para levar na bolsa
     for item in selecionados:
         key = ""
         for keys in item.itens:
@@ -114,8 +117,6 @@ def crossover(itensSelecionados):
     print("População depois do crossover" + str(populacao))
     return populacao
 
-def stopFunc():
-    return True
 
 def showResult(selecionados):
     # Printa os itens selecionados
@@ -124,36 +125,78 @@ def showResult(selecionados):
     for keys in selecionados[0].itens:
         key = key + ", " + list(keys.items())[0][1]
     print(key[2:])
+    print("Qtd de loops: ", loops)
+
 
 def mutation(selected, txReplace = 25):
-    def changeBit(bit):
-        if bit == 1:
-            bit = 0
-        else:
-            bit = 1
-        return bit
-
     print("Antes mutação %s" % selected)
 
     valueRandom = randrange(0, (len(selected) - 1))
-    selected[valueRandom] = changeBit(selected[valueRandom])
+    selected[valueRandom] = f.changeBit(selected[valueRandom])
 
     print("Depois da mutação: %s" % selected)
 
     return selected
 
+
+
+'''
+Critérios de parada:
+    - (1) predefinir o número absoluto de gerações que o algoritmo realizará,
+    - (2) não há melhoras na população a x iterações,
+    - (3) quando a avaliação de um indivíduo atingir um valor predefinido.
+'''
+# a partir da população e a pontuação de cada item, verifica se um elemento da população atinge
+#   a faixa de valor estipulada para parada, que é 10% (padrão, variável txValid) do valor
+#   máximo da pontuação com carga de 30kg.
+def stopped(population, itens, txValid=10.0):
+    maxValue = 39 # valor de pontuação max. obtido manualmente verificando as possibilidades
+    selected = str()
+
+    txValid = txValid / 100
+    minPoints = maxValue / txValid
+
+    # obtém pontuação de toda população #list()
+    populationPoints = f.calcPointsPopulation(population, itens)
+
+    # obtém maior valor da pontuação da população #int()
+    biggerValue = f.biggerValue(populationPoints)
+
+    # retorna o elemento selecionado com pontuação mais alta
+    #   com o conteúdo da sua bolsa #list()
+    for i in range(len(populationPoints)):
+        if populationPoints[i] == biggerValue:
+            selected = population[i]
+
+    # @return True se o valor maior obtido é >= minimo de pontos requerido =
+    #   pontuação_max * taxa %
+    return (False, True) [biggerValue >= minPoints]
+
+
+
+
+
 if __name__ == '__main__':
     stop = False
     itensMochila = computeFitness(populations)
+    loops = 0
 
     while not stop:
+        loops = loops +1
+        print("\n\n###########################################\n"
+              "###########################################\n\n")
+
         selecionados = select(itensMochila, maxWeight)
         populacao = crossover(selecionados)
         populacao[2] = mutation(populacao[2])
+
         itensMochila = computeFitness(populacao)
-        stop = stopFunc()
+
+        print("\nPopulação atual: ", populacao)
+        stop = stopped(populacao, itens)
 
     showResult(selecionados)
+
 
 
 '''
@@ -165,23 +208,23 @@ A3 -> {0,1,0,1,0,0}
 A4 -> {0,1,1,0,0,1}
 
  +---------------+------+--------+----+----+----+----+
- | Item          | Peso | Pontos | A1 | A2 | A3 | A4 |
+ | Item          | Peso | Pontos | A1 | A2 | A3 | A4 |  A5  |  A6
  +---------------+------+--------+----+----+----+----+
- | Saco de dormir| 15   |     15 | 1  |  0 | 0  | 0  |
+ | Saco de dormir| 15   |     15 | 1  |  0 | 0  | 0  |  1   |  0
  +---------------+------+--------+----+----+----+----+
- | Corda         | 3    |      7 | 0  |  0 | 1  | 1  |
+ | Corda         | 3    |      7 | 0  |  0 | 1  | 1  |  1   |  1
  +---------------+------+--------+----+----+----+----+
- | Canivete      | 2    |     10 | 0  |  1 | 0  |  1 |
+ | Canivete      | 2    |     10 | 0  |  1 | 0  |  1 |  1   |  1
  +---------------+------+--------+----+----+----+----+
- | Tocha         | 5    |      5 | 1  |  1 |  1 |  0 |
+ | Tocha         | 5    |      5 | 1  |  1 |  1 |  0 |  1   |  1
  +---------------+------+--------+----+----+----+----+
- | Garrafa       | 9    |      8 | 1  |  1 |  0 |  0 |
+ | Garrafa       | 9    |      8 | 1  |  1 |  0 |  0 |  0   |  0
  +---------------+------+--------+----+----+----+----+
- | Comida        | 20   |     17 | 0  |  0 |  0 |  1 |
+ | Comida        | 20   |     17 | 0  |  0 |  0 |  1 |  0   |  1
  +---------------+------+--------+----+----+----+----+
-                        | Peso   | 29 |    |    |    |
+                        | Peso   | 29 | 16 |  8 | 25 |  25  |  30
                         +--------+----+----+----+----+
-                        | Pontos | 28 | 23 | 12 | 34 |
+                        | Pontos | 28 | 23 | 12 | 34 |  37  |  39
                         +--------+----+----+----+----+
 
 '''
