@@ -91,25 +91,51 @@ def select(itensMochila, maxWeight):
 def crossover(itensSelecionados):
     populacao = []
     index = 0
+    childrens = list()
 
     for index in range(len(itensSelecionados)):
         populacao.append(itensSelecionados[index].population)
 
-    tamanhoMax = 6
-    corte1 = randrange(0, tamanhoMax)
-    corte2 = randrange(0, tamanhoMax)
+    lenMax = len(itensSelecionados[0].population)
+    cut = randrange(1, lenMax)
 
+    print("Corte em: ", cut)
     print("População antes do crossover" + str(populacao))
-    filho1 = itensSelecionados[0].population
-    filho1[corte1], filho1[corte2] = filho1[corte2], filho1[corte1]
+    children = list()
 
-    filho2 = itensSelecionados[1].population
-    filho2[corte1], filho2[corte2] = filho2[corte2], filho2[corte1]
-    populacao.append(filho1)
-    populacao.append(filho2)
+    # varre elemento por elemento
+    for i in range(len(populacao)):
+        bitBeforeCut = list() # armazena bits de [i] até o corte
+        bitAfterCut = list() # armazena bits de [i] após o corte
+
+        # varre bit a bit do elemento
+        for j in range(lenMax):
+            # armazena bits até o indice definido como corte
+            if ( j < cut ):
+                bitBeforeCut.append(populacao[i][j])
+            else:
+                bitAfterCut.append(populacao[i][j])
+
+        # armazena sequencialmente bits anteriores e
+        #   posteriores ao corte
+        children.append(bitBeforeCut)
+        children.append(bitAfterCut)
+
+    # faz o cross efetivamente
+    #   merge do [index +1] (bitAfterCut) com [index] (bitBeforeCut)
+    index = 0
+    while ( index < len(populacao)*2 ):
+        childrens.append(children[index+1] + children[index])
+
+        index += 2
+
+    # adiciona os filhos a população
+    populacao.append(childrens[0])
+    populacao.append(childrens[1])
 
     print("População depois do crossover" + str(populacao))
     return populacao
+
 
 def stopFunc(itensMochila):
     minPoints = 39
