@@ -87,7 +87,7 @@ def select(itensMochila, maxWeight):
     return selecionados
 
 
-# Crossover multiplo
+# Crossover multiplo: define um ponto de corte no elemento e faz a trocar/inversão para gerar filho
 def crossover(itensSelecionados):
     populacao = []
     index = 0
@@ -122,10 +122,10 @@ def crossover(itensSelecionados):
         children.append(bitAfterCut)
 
     # faz o cross efetivamente
-    #   merge do [index +1] (bitAfterCut) com [index] (bitBeforeCut)
+    #   merge do elemento 1 (bitAfterCut) com elemento 2 (bitBeforeCut)
     index = 0
     while ( index < len(populacao)*2 ):
-        childrens.append(children[index+1] + children[index])
+        childrens.append(children[index] + children[ (len(children)-1) - index])
 
         index += 2
 
